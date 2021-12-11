@@ -295,9 +295,9 @@ class DeviceRecordController extends Controller
                 $faceRecord->temperature = $temperature;
 
 
-                    if (sizeof(FaceRecord::where('upi_no', '=', $upi_no)
-                                    ->where('time_taken', '>', (string)Carbon::today()->valueOf())
-                                    ->where('time_taken', '>=', (string)Carbon::today()->addHours(9)->valueOf())
+                    if (sizeof(FaceRecord::where('time_taken', '>', (string)Carbon::today()->valueOf())
+                                     ->where('time_taken', '<', (string)Carbon::today()->addHours(9)->valueOf())
+                                     ->where('upi_no', '=', $upi_no)
                                     ->get())==1){
                                     $level=$level . "\nBefore 9am";
 
@@ -333,10 +333,10 @@ class DeviceRecordController extends Controller
                                         //Ignore
                                     }
                                 }
-                                elseif(sizeof(FaceRecord::where('upi_no', '=', $upi_no)
-                                    ->where('time_taken', '>', (string)Carbon::today()->addHours(9)->valueOf())
-                                    ->where('time_taken', '<', (string)Carbon::tomorrow()->valueOf())
-                                    ->get())==1){
+                                elseif(sizeof(FaceRecord::where('time_taken', '>', (string)Carbon::today()->addHours(9)->valueOf())
+                                ->where('time_taken', '<', (string)Carbon::tomorrow()->valueOf())
+                                ->where('upi_no', '=', $upi_no)
+                               ->get())==1){
                                     $level=$level . "\nExit After 9am";
 
                                     $faceR = FaceRecord::where('upi_no', '=', $upi_no)
