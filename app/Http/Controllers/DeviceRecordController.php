@@ -300,25 +300,80 @@ class DeviceRecordController extends Controller
                                     ->where('time_taken', '>=', (string)Carbon::today()->addhours(9)->valueOf())
                                     ->get())==1){
                                     $level=$level . "\nBefore 9am";
-                                    $guardian = Guardian::where('student_id', '=', $student->id)->where('should_notify', '=', 'true')->first();
 
+                                    $faceR = FaceRecord::where('upi_no', '=', $upi_no)
+                                         ->where('time_taken', '>', (string)Carbon::today()->valueOf())
+                                        ->where('time_taken', '<', (string)Carbon::today()->addhours(9)->valueOf())
+                                      ->orderby('id', 'DESC')
+                                      ->first();
+
+                                    if ($faceR ==null) {
+                                        $level = $level . "\nEnterBefore9am";
+                                        $faceRecord->status = 'enter';
+                                        $faceRecord->save();
+
+
+                                    $guardian = Guardian::where('student_id', '=', $student->id)->where('should_notify', '=', 'true')->first();
                                                 if ($guardian != null) {
                                                     $level = $level . "\nhasGuardian1";
+
+                                                    $faceRecord->has_parent = 'yes';
+                                                    $faceRecord->save();
                                                 $this->sendSms($guardian, $faceRecord, $time_taken, 'first',$student);
                                                 }
                                                 else{
                                                     $level=$level."\no guardian";
+                                                    $faceRecord->has_parent = 'no';
+                                                    $faceRecord->save();
                                                 }
                                             }
-                                    else{ $guardian = Guardian::where('student_id', '=', $student->id)->where('should_notify', '=', 'true')->first();
+                                    else{
+                                        $level=$level . "\nSecondAttemptBefore9am";
+                                         //recent record taken
+                                        //Ignore
+                                    }
+                                }
+                                elseif(sizeof(FaceRecord::where('upi_no', '=', $upi_no)
+                                    ->where('time_taken', '>', (string)Carbon::today()->addHours(9)->valueOf())
+                                    ->where('time_taken', '>=', (string)Carbon::tomorrow()->valueOf())
+                                    ->get())==1){
+                                    $level=$level . "\nExit After 9am";
+
+                                    $faceR = FaceRecord::where('upi_no', '=', $upi_no)
+                                         ->where('time_taken', '>', (string)Carbon::today()->addHours(9)->valueOf())
+                                         ->where('time_taken', '<', (string)Carbon::tomorrow()->valueOf())
+                                         ->orderby('id', 'DESC')
+                                         ->first();
+
+                                    if ($faceR ==null) {
+                                        $faceRecord->status = 'exit';
+                                        $faceRecord->save();
+
+
+                                        $guardian = Guardian::where('student_id', '=', $student->id)->where('should_notify', '=', 'true')->first();
                                         if ($guardian != null) {
                                             $level = $level . "\nhasGuardian1";
+                                            $faceRecord->has_parent = 'yes';
+                                            $faceRecord->save();
                                         $this->sendSms($guardian, $faceRecord, $time_taken, 'second',$student);
                                         }
                                         else{
                                             $level=$level."\no guardian";
-
+                                            $faceRecord->has_parent = 'no';
+                                            $faceRecord->save();
+                                        }
                                     }
+
+                                else{
+                                        $level=$level . "\nSecondAttemptAfter9am";
+                                         //recent record taken
+                                        //Ignore
+                                    }
+                                }
+                                    else{
+                                        $level=$level . "\nincorrect time format";
+
+
 
 
 
@@ -536,18 +591,23 @@ class DeviceRecordController extends Controller
             // }
              }
             }
-              else{
-
-            $level = $level . "\nfaceNotCapturedCorrectly";
+            else{
+                $level=$level."\nNot a student";
+            }
         }
 
-        $record = new DeviceRecord();
+
+    else{
+
+        $level = $level . "\nfaceNotCapturedCorrectly";
+        }
+
+    $record = new DeviceRecord();
         // $record->data = 'recordUpload|'.$level.implode("|",$request);
         $record->data = 'recordUpload|' . $level;
 
         $record->save();
         $level = $level . "\uploaded";
-    }
 }
 
     // public function dataPullT(Request $request)
