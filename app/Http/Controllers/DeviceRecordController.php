@@ -142,7 +142,7 @@ class DeviceRecordController extends Controller
                 // dd($student->id);
                 if ($student != null) {
 
-                    $level = $level . "\nisStudent";
+                    $level = $level . "\nnnisStudent";
                     $faceRecord = new FaceRecord();
                     $faceRecord->upi_no = $upi_no;
 
@@ -297,7 +297,7 @@ class DeviceRecordController extends Controller
 
                 $guardian = Guardian::where('student_id', '=', $student->id)->where('should_notify', '=', 'true')->first();
                 if ($guardian != null) {
-                    $level = $level . "\nhasGuardian";
+                    $level = $level . "\nhasssGuardian";
                     $faceR = FaceRecord::where('upi_no', '=', $upi_no)
                         ->where('time_taken', '>', (string)Carbon::today()->valueOf())
                         ->where('time_taken', '<', (string)Carbon::tomorrow()->valueOf())
