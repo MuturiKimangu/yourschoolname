@@ -184,7 +184,7 @@ class DeviceRecordController extends Controller
                 }
 
 
-                /////////////////////////erer
+                /////////////////////////
             } else if ($enter == 1 && $exit == 0 && $mnull == 1) {
                 $r = FaceRecord::where('time_taken', '=', (string)Carbon::today()->valueOf())
                     ->where('time_taken', '<', (string)Carbon::tomorrow()->valueOf())
@@ -200,7 +200,7 @@ class DeviceRecordController extends Controller
                     ->where('upi_no', '=', $key->upi_no)
                     ->get()->first();
                 if ($r) {
-                    $r->status = 'exit';
+                    $r->status = 'enter';
                     $r->save();
                 }
                 $t = FaceRecord::where('time_taken', '>', (string)Carbon::today()->valueOf())
@@ -354,10 +354,10 @@ class DeviceRecordController extends Controller
                             }
                         }
                     } else {
-                        $level = $level . "\nnoFaceree";
+                        $level = $level . "\nnoFace";
                         //no record
                         // dd('first');
-                        $faceRecord->status = 'exit';
+                        $faceRecord->status = 'enter';
 
                         $faceRecord->has_parent = 'yes';
                         $faceRecord->save();
@@ -429,7 +429,7 @@ class DeviceRecordController extends Controller
                         $level = $level . "\nnoFace";
                         //no record
                         // dd('first');
-                        $faceRecord->status = 'exit';
+                        $faceRecord->status = 'enter';
                         $faceRecord->has_parent = 'no';
                         $faceRecord->save();
                     }
@@ -485,9 +485,9 @@ class DeviceRecordController extends Controller
                             }
                         }
                     } else {
-                        //no recordeere
+                        //no record
                         // dd('first');
-                        $faceRecord->status = 'exit';
+                        $faceRecord->status = 'enter';
                         $faceRecord->save();
                     }
                 }
@@ -764,7 +764,7 @@ class DeviceRecordController extends Controller
         if ($sms_time == 'first') {
             $templete1 = Smstemplete::where('id', '=', 1)->get()->pluck('content');
 
-            $message1 = "Dear $guardian->fname, your child " . $face_record->student->first_name . " " . $face_record->student->surname . "  UPI:" . $face_record->student->upi_no . " has left school for home at $new_time with a temperature of $temp " . $templete1[0];
+            $message1 = "Dear $guardian->fname, your child " . $face_record->student->first_name . " " . $face_record->student->surname . "  UPI:" . $face_record->student->upi_no . " has arrived at school at $new_time with a temperature of $temp " . $templete1[0];
             // dd($templete);
         } else {
             $templete1 = Smstemplete::where('id', '=', 2)->get()->pluck('content');
@@ -871,7 +871,7 @@ class DeviceRecordController extends Controller
         if ($sms_time == 'first') {
             $templete1 = Smstemplete::where('id', '=', 1)->get()->pluck('content');
 
-            $message1 = "Dear $guardian->fname, your child " . $face_record->student->first_name . " " . $face_record->student->surname . "  UPI:" . $face_record->student->upi_no . " has left school for home at $new_time with a temperature of $temp " . $templete1[0];
+            $message1 = "Dear $guardian->fname, your child " . $face_record->student->first_name . " " . $face_record->student->surname . "  UPI:" . $face_record->student->upi_no . " has arrived at school at $new_time with a temperature of $temp " . $templete1[0];
             // dd($templete);
         } else {
             $templete1 = Smstemplete::where('id', '=', 2)->get()->pluck('content');
