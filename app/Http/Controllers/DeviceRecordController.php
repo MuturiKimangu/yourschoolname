@@ -184,7 +184,7 @@ class DeviceRecordController extends Controller
                 }
 
 
-                /////////////////////////
+                /////////////////////////erer
             } else if ($enter == 1 && $exit == 0 && $mnull == 1) {
                 $r = FaceRecord::where('time_taken', '=', (string)Carbon::today()->valueOf())
                     ->where('time_taken', '<', (string)Carbon::tomorrow()->valueOf())
