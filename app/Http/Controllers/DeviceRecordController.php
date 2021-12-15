@@ -39,6 +39,7 @@ class DeviceRecordController extends Controller
     {
         //
     }
+    //yourschoolname
 
     /**
      * Store a newly created resource in storage.
