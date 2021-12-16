@@ -488,7 +488,7 @@ class DeviceRecordController extends Controller
                     } else {
                         //no record
                         // dd('first');
-                        $faceRecord->status = 'exit';
+                        $faceRecord->status = 'enter';
                         $faceRecord->save();
                     }
                 }
