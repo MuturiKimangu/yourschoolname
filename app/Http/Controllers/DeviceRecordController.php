@@ -366,7 +366,7 @@ class DeviceRecordController extends Controller
 //                        }
                         //Send 1 sms
                         $guardian = Guardian::where('student_id', '=', $student->id)->where('should_notify', '=', 'true')->get()->first();
-                        if ($faceRecord->time_taken>(string)carbon::today()->addHour(9)->valueOf()) {
+                        if ($faceRecord->time_taken>(string)carbon::today()->addHour(20)->valueOf()) {
 
                             $faceRecord->status = 'exit';
                             $faceRecord->has_parent = 'yes';
