@@ -376,6 +376,7 @@ class DeviceRecordController extends Controller
                             $this->sendSms($guardian, $faceRecord, $time_taken, 'second',$student);
                         }
                             else{
+                            $level=$level."\nworkingwell";
                                 $faceRecord->status = 'enter';
                                 $faceRecord->has_parent = 'yes';
                                 $faceRecord->save();
