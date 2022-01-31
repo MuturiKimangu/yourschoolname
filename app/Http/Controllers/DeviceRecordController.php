@@ -358,10 +358,6 @@ class DeviceRecordController extends Controller
                         $level = $level . "\nnoFace";
                         //no record
                         // dd('first');
-                        $faceRecord->status = 'enter';
-
-                        $faceRecord->has_parent = 'yes';
-                        $faceRecord->save();
                         //disable sms $guardians = Guardian::where('student_id', '=', $student->id)->where('should_notify', '=', 'true')->get();
 //
 //                        $guardians = Guardian::where('student_id', '=', $student->id)->where('should_notify', '=', 'true')->get();
@@ -370,8 +366,21 @@ class DeviceRecordController extends Controller
 //                        }
                         //Send 1 sms
                         $guardian = Guardian::where('student_id', '=', $student->id)->where('should_notify', '=', 'true')->get()->first();
+                        if ($faceRecord->time_taken>(string)carbon::today()->addHour(9)->valueOf()) {
+
+                            $faceRecord->status = 'exit';
+                            $faceRecord->has_parent = 'yes';
+                            $faceRecord->save();
+
+                            $this->sendSms($guardian, $faceRecord, $time_taken, 'second',$student);
+                        }
+                            else{
+                                $faceRecord->status = 'enter';
+                                $faceRecord->has_parent = 'yes';
+                                $faceRecord->save();
 
                             $this->sendSms($guardian, $faceRecord, $time_taken, 'first',$student);
+                            }
 
                     }
 
